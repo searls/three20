@@ -1,7 +1,26 @@
+//
+// Copyright 2009-2010 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
 #import "Three20/TTStyledLayout.h"
+
+#import "Three20/TTGlobalUI.h"
+
 #import "Three20/TTStyledNode.h"
 #import "Three20/TTStyledFrame.h"
-#import "Three20/TTDefaultStyleSheet.h"
+#import "Three20/TTStyleSheet.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -346,7 +365,7 @@
 
       if (_lastFrame) {
         if (!_lineHeight && [elt isKindOfClass:[TTStyledLineBreakNode class]]) {
-          _lineHeight = [_font lineHeight];
+          _lineHeight = [_font ttLineHeight];
         }
         [self breakLine];
       }
@@ -356,6 +375,7 @@
     } else {
       if (padding) {
         _x += padding.margin.left;
+        _height += padding.margin.top;
       }
       if (style) {
         _inlineFrame = [self addInlineFrame:style element:elt width:0 height:0];
@@ -547,7 +567,7 @@
           if (lineRange.length) {
             NSString* line = [text substringWithRange:lineRange];
             [self addFrameForText:line element:element node:textNode width:frameWidth
-                  height:_lineHeight ? _lineHeight : [_font lineHeight]];
+                  height:_lineHeight ? _lineHeight : [_font ttLineHeight]];
           }
 
           if (_lineWidth) {
@@ -568,7 +588,7 @@
       if (lineRange.length) {
         NSString* line = [text substringWithRange:lineRange];
         [self addFrameForText:line element:element node:textNode width:frameWidth
-              height:_lineHeight ? _lineHeight : [_font lineHeight]];
+              height:_lineHeight ? _lineHeight : [_font ttLineHeight]];
 
         lineStartIndex = lineRange.location + lineRange.length;
         frameWidth = 0;
@@ -581,7 +601,7 @@
         if (lineRange.length) {
           NSString* line = [text substringWithRange:lineRange];
           [self addFrameForText:line element:element node:textNode width:frameWidth
-                height:_lineHeight ? _lineHeight : [_font lineHeight]];
+                height:_lineHeight ? _lineHeight : [_font ttLineHeight]];
         }
         
         if (_lineWidth) {
@@ -617,7 +637,7 @@
                                                         - lineStartIndex);
         NSString* line = !_lineWidth ? word : [text substringWithRange:lineRange];
         [self addFrameForText:line element:element node:textNode width:frameWidth
-              height:[_font lineHeight]];
+              height:[_font ttLineHeight]];
         frameWidth = 0;
       }
     }

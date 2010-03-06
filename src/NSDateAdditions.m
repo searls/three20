@@ -1,7 +1,29 @@
-#import "Three20/TTGlobal.h"
+//
+// Copyright 2009-2010 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#import "Three20/NSDateAdditions.h"
+
+#import "Three20/TTGlobalCore.h"
+#import "Three20/TTGlobalCoreLocale.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Additions.
+ */
 @implementation NSDate (TTCategory)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,6 +136,29 @@
     return [NSString stringWithFormat:TTLocalizedString(@"%d hours ago", @""), hours];
   } else {
     return [self formatDateTime];
+  }
+}
+
+- (NSString*)formatShortRelativeTime {
+  NSTimeInterval elapsed = abs([self timeIntervalSinceNow]);
+
+  if (elapsed < TT_MINUTE) {
+    return TTLocalizedString(@"<1m", @"Date format: less than one minute ago");
+
+  } else if (elapsed < TT_HOUR) {
+    int mins = (int)(elapsed / TT_MINUTE);
+    return [NSString stringWithFormat:TTLocalizedString(@"%dm", @"Date format: 50m"), mins];
+
+  } else if (elapsed < TT_DAY) {
+    int hours = (int)((elapsed + TT_HOUR / 2) / TT_HOUR);
+    return [NSString stringWithFormat:TTLocalizedString(@"%dh", @"Date format: 3h"), hours];
+
+  } else if (elapsed < TT_WEEK) {
+    int day = (int)((elapsed + TT_DAY / 2) / TT_DAY);
+    return [NSString stringWithFormat:TTLocalizedString(@"%dd", @"Date format: 3d"), day];
+
+  } else {
+    return [self formatShortTime];
   }
 }
 

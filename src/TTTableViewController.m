@@ -1,12 +1,35 @@
+//
+// Copyright 2009-2010 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
 #import "Three20/TTTableViewController.h"
+
+#import "Three20/TTTableViewVarHeightDelegate.h"
+
+#import "Three20/TTGlobalCore.h"
+#import "Three20/TTGlobalCoreLocale.h"
+#import "Three20/TTGlobalUI.h"
+#import "Three20/TTGlobalUINavigator.h"
+#import "Three20/TTGlobalStyle.h"
+#import "Three20/TTDebugFlags.h"
+
 #import "Three20/TTListDataSource.h"
 #import "Three20/TTTableView.h"
-#import "Three20/TTTableItem.h"
-#import "Three20/TTTableItemCell.h"
 #import "Three20/TTActivityLabel.h"
 #import "Three20/TTErrorView.h"
 #import "Three20/TTTableViewDelegate.h"
-#import "Three20/TTSearchDisplayController.h"
 #import "Three20/TTDefaultStyleSheet.h"
 #import "Three20/TTNavigator.h"
 
@@ -29,7 +52,7 @@ static const CGFloat kBannerViewHeight = 22;
 // private
 
 - (void)createInterstitialModel {
-  self.dataSource = [[[TTTableViewInterstialDataSource alloc] init] autorelease];
+  self.dataSource = [[[TTTableViewInterstitialDataSource alloc] init] autorelease];
 }
 
 - (NSString*)defaultTitleForLoading {
@@ -372,12 +395,12 @@ static const CGFloat kBannerViewHeight = 22;
                                                  atIndexPath:indexPath];
         if (newIndexPath) {
           if (newIndexPath.length == 1) {
-            TTLOG(@"UPDATING SECTION AT %@", newIndexPath);
+            TTDCONDITIONLOG(TTDFLAG_TABLEVIEWMODIFICATIONS, @"UPDATING SECTION AT %@", newIndexPath);
             NSInteger sectionIndex = [newIndexPath indexAtPosition:0];
             [_tableView reloadSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                         withRowAnimation:UITableViewRowAnimationTop];
           } else if (newIndexPath.length == 2) {
-            TTLOG(@"UPDATING ROW AT %@", newIndexPath);
+            TTDCONDITIONLOG(TTDFLAG_TABLEVIEWMODIFICATIONS, @"UPDATING ROW AT %@", newIndexPath);
             [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
                         withRowAnimation:UITableViewRowAnimationTop];
           }
@@ -400,12 +423,12 @@ static const CGFloat kBannerViewHeight = 22;
                                                  atIndexPath:indexPath];
         if (newIndexPath) {
           if (newIndexPath.length == 1) {
-            TTLOG(@"INSERTING SECTION AT %@", newIndexPath);
+            TTDCONDITIONLOG(TTDFLAG_TABLEVIEWMODIFICATIONS, @"INSERTING SECTION AT %@", newIndexPath);
             NSInteger sectionIndex = [newIndexPath indexAtPosition:0];
             [_tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                         withRowAnimation:UITableViewRowAnimationTop];
           } else if (newIndexPath.length == 2) {
-            TTLOG(@"INSERTING ROW AT %@", newIndexPath);
+            TTDCONDITIONLOG(TTDFLAG_TABLEVIEWMODIFICATIONS, @"INSERTING ROW AT %@", newIndexPath);
             [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
                         withRowAnimation:UITableViewRowAnimationTop];
             
@@ -431,14 +454,14 @@ static const CGFloat kBannerViewHeight = 22;
                                                  atIndexPath:indexPath];
         if (newIndexPath) {
           if (newIndexPath.length == 1) {
-            TTLOG(@"DELETING SECTION AT %@", newIndexPath);
+            TTDCONDITIONLOG(TTDFLAG_TABLEVIEWMODIFICATIONS, @"DELETING SECTION AT %@", newIndexPath);
             NSInteger sectionIndex = [newIndexPath indexAtPosition:0];
             [_tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
-                        withRowAnimation:UITableViewRowAnimationTop];
+                        withRowAnimation:UITableViewRowAnimationLeft];
           } else if (newIndexPath.length == 2) {
-            TTLOG(@"DELETING ROW AT %@", newIndexPath);
+            TTDCONDITIONLOG(TTDFLAG_TABLEVIEWMODIFICATIONS, @"DELETING ROW AT %@", newIndexPath);
             [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
-                        withRowAnimation:UITableViewRowAnimationTop];
+                        withRowAnimation:UITableViewRowAnimationLeft];
           }
           [self invalidateView];
         } else {
