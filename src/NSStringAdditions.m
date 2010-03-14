@@ -88,6 +88,7 @@
     NSString* value = [query objectForKey:key];
     value = [value stringByReplacingOccurrencesOfString:@"?" withString:@"%3F"];
     value = [value stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"];
+    value = [value stringByReplacingOccurrencesOfString:@" " withString:@"%20"];    
     NSString* pair = [NSString stringWithFormat:@"%@=%@", key, value];
     [pairs addObject:pair];
   }
